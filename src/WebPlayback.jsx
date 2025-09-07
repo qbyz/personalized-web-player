@@ -97,7 +97,7 @@ function WebPlayback(props) {
                         onClick={() => { player.previousTrack(); }}
                         aria-label="Previous Track"
                     >
-                        &#60;&#60;
+                        ⏮
                     </button>
                     <button
                         className={`${
@@ -113,7 +113,7 @@ function WebPlayback(props) {
                         onClick={() => { player.nextTrack(); }}
                         aria-label="Next Track"
                     >
-                        &#62;&#62;
+                        ⏭
                     </button>
                 </div>
             </div>
