@@ -1,6 +1,6 @@
 function Login() {
     const handleLogin = () => {
-        window.location.href = "/api/auth/login";
+        window.location.href = "/api/login";
     };
 
     return (
