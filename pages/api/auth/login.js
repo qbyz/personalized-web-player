@@ -1,4 +1,3 @@
-// pages/api/auth/login.js
 export default function handler(req, res) {
     const generateRandomString = (length) => {
         let text = '';
@@ -10,8 +9,7 @@ export default function handler(req, res) {
     };
 
     const state = generateRandomString(16);
-    const scope =
-        'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
+    const scope = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
 
     const params = new URLSearchParams({
         response_type: 'code',

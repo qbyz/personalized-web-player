@@ -1,14 +1,13 @@
-import React from 'react';
+function Login() {
+    const handleLogin = () => {
+        window.location.href = "/api/auth/login";
+    };
 
-export default function Login() {
     return (
-        <div className="login-container">
-            <button
-                onClick={() => (window.location.href = '../api/auth/login')}
-                className="login-button"
-            >
-                Login with Spotify
-            </button>
+        <div className="login">
+            <button onClick={handleLogin}>Login with Spotify</button>
         </div>
     );
 }
+
+export default Login;
