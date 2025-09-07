@@ -33,7 +33,6 @@ function WebPlayback(props) {
             player.addListener('ready', async ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
 
-                // Automatically transfer playback to this device and resume
                 await fetch('https://api.spotify.com/v1/me/player', {
                     method: 'PUT',
                     headers: {
@@ -68,30 +67,60 @@ function WebPlayback(props) {
 
     if (!is_active) {
         return (
-            <div className="container">
-                <div className="main-wrapper">
-                    <b>Transferring playback... your web player should appear in Spotify Connect shortly.</b>
-                </div>
-            </div>
-        );
-    } else {
-        return (
-            <div className="container">
-                <div className="main-wrapper">
-                    <img src={current_track.album.images[0].url} className="now-playing__cover" alt="" />
-
-                    <div className="now-playing__side">
-                        <div className="now-playing__name">{current_track.name}</div>
-                        <div className="now-playing__artist">{current_track.artists[0].name}</div>
-
-                        <button className="btn-spotify" onClick={() => { player.previousTrack(); }}>&lt;&lt;</button>
-                        <button className="btn-spotify" onClick={() => { player.togglePlay(); }}>{is_paused ? "PLAY" : "PAUSE"}</button>
-                        <button className="btn-spotify" onClick={() => { player.nextTrack(); }}>&gt;&gt;</button>
-                    </div>
+            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
+                <div className="bg-white bg-opacity-80 rounded-2xl px-8 py-6 shadow-xl">
+                    <b className="text-lg text-gray-800">
+                        Transferring playback... your web player should appear in Spotify Connect shortly.
+                    </b>
                 </div>
             </div>
         );
     }
+
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
+            <div className="flex flex-col md:flex-row bg-white bg-opacity-90 rounded-2xl shadow-2xl p-8 gap-8 items-center">
+                {current_track.album.images[0].url && (
+                    <img
+                        src={current_track.album.images[0].url}
+                        alt="Album cover"
+                        className="rounded-xl w-64 h-64 object-cover shadow-lg"
+                    />
+                )}
+                <div className="flex flex-col items-center md:items-start gap-4">
+                    <div>
+                        <div className="text-3xl font-bold text-gray-900 mb-1">{current_track.name || <span className="text-gray-400">No Track</span>}</div>
+                        <div className="text-xl text-gray-700 mb-4">{current_track.artists[0].name || <span className="text-gray-400">No Artist</span>}</div>
+                    </div>
+                    <div className="flex gap-6">
+                        <button
+                            className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-5 rounded-full shadow transition"
+                            onClick={() => { player.previousTrack(); }}
+                            aria-label="Previous Track"
+                        >
+                            &#60;&#60;
+                        </button>
+                        <button
+                            className={`${
+                                is_paused ? "bg-green-700 hover:bg-green-800" : "bg-green-500 hover:bg-green-600"
+                            } text-white text-2xl font-bold py-2 px-8 rounded-full shadow transition`}
+                            onClick={() => { player.togglePlay(); }}
+                            aria-label={is_paused ? "Play" : "Pause"}
+                        >
+                            {is_paused ? "PLAY" : "PAUSE"}
+                        </button>
+                        <button
+                            className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-5 rounded-full shadow transition"
+                            onClick={() => { player.nextTrack(); }}
+                            aria-label="Next Track"
+                        >
+                            &#62;&#62;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 export default WebPlayback;
