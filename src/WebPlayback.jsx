@@ -16,6 +16,16 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
 
     useEffect(() => {
+        const setAppHeight = () => {
+            document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+        };
+        setAppHeight();
+        window.addEventListener('resize', setAppHeight);
+        return () => window.removeEventListener('resize', setAppHeight);
+    }, []);
+
+
+    useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
         script.async = true;
@@ -67,7 +77,7 @@ function WebPlayback(props) {
 
     if (!is_active) {
         return (
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
+            <div className="h-[var(--app-height)] flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
                 <div className="bg-white bg-opacity-80 rounded-2xl px-8 py-6 shadow-xl">
                     <b className="text-lg text-gray-800">
                         Transferring playback... your web player should appear in Spotify Connect shortly.
@@ -78,7 +88,7 @@ function WebPlayback(props) {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
+        <div className="h-[var(--app-height)]  flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
             <div className="w-full max-w-md bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
                 {current_track.album.images[0].url && (
                     <img
