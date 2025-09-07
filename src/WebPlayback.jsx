@@ -32,7 +32,7 @@ function WebPlayback(props) {
             player.addListener('ready', async ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
 
-                // Auto-transfer playback to this device
+                // Automatically transfer playback to this device and resume
                 await fetch('https://api.spotify.com/v1/me/player', {
                     method: 'PUT',
                     headers: {
@@ -69,7 +69,7 @@ function WebPlayback(props) {
         return (
             <div className="container">
                 <div className="main-wrapper">
-                    <b>Instance not active. Transferring playback...</b>
+                    <b>Transferring playback... your web player should appear in Spotify Connect shortly.</b>
                 </div>
             </div>
         );
