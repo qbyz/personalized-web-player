@@ -1,8 +1,8 @@
+// pages/api/auth/login.js
 export default function handler(req, res) {
     const generateRandomString = (length) => {
         let text = '';
-        const possible =
-            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
         for (let i = 0; i < length; i++) {
             text += possible.charAt(Math.floor(Math.random() * possible.length));
         }
@@ -10,8 +10,8 @@ export default function handler(req, res) {
     };
 
     const state = generateRandomString(16);
-    // Updated scopes for playback control
-    const scope = 'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
+    const scope =
+        'streaming user-read-email user-read-private user-read-playback-state user-modify-playback-state';
 
     const params = new URLSearchParams({
         response_type: 'code',
