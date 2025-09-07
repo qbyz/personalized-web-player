@@ -1,6 +1,16 @@
 export default async function handler(req, res) {
-    const code = req.query.code || null;
+    const { access_token, refresh_token } = req.cookies;
 
+    if (!refresh_token) {
+        return res.status(401).json({ error: "No refresh token" });
+    }
+
+    // If access token exists, just return it
+    if (access_token) {
+        return res.json({ access_token });
+    }
+
+    // Otherwise, refresh
     const response = await fetch("https://accounts.spotify.com/api/token", {
         method: "POST",
         headers: {
@@ -12,9 +22,8 @@ export default async function handler(req, res) {
                 ).toString("base64"),
         },
         body: new URLSearchParams({
-            grant_type: "authorization_code",
-            code,
-            redirect_uri: process.env.REDIRECT_URI,
+            grant_type: "refresh_token",
+            refresh_token,
         }),
     });
 
@@ -24,12 +33,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: data.error_description });
     }
 
-    // Store tokens in cookies (for simplicity)
-    res.setHeader("Set-Cookie", [
-        `access_token=${data.access_token}; Path=/; HttpOnly; Secure; SameSite=Lax`,
-        `refresh_token=${data.refresh_token}; Path=/; HttpOnly; Secure; SameSite=Lax`,
-    ]);
+    // Save new access token cookie
+    res.setHeader(
+        "Set-Cookie",
+        `access_token=${data.access_token}; Path=/; HttpOnly; Secure; SameSite=Lax`
+    );
 
-    // Redirect back to home (frontend will call /api/auth/token next)
-    res.redirect("/");
+    res.json({ access_token: data.access_token });
 }
