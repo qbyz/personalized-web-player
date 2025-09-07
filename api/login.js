@@ -17,6 +17,7 @@ export default function handler(req, res) {
         scope,
         redirect_uri: process.env.REDIRECT_URI,
         state,
+        show_dialog: 'true',
     });
 
     res.redirect('https://accounts.spotify.com/authorize?' + params.toString());
