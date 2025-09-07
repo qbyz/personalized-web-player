@@ -7,12 +7,12 @@ function App() {
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('access_token');
-    if (accessToken) {
-      setToken(accessToken);
-      window.history.replaceState({}, document.title, '/');
+    async function fetchToken() {
+      const res = await fetch('/api/token');
+      const data = await res.json();
+      if (data.access_token) setToken(data.access_token);
     }
+    fetchToken();
   }, []);
 
   return <>{token === '' ? <Login /> : <WebPlayback token={token} />}</>;
