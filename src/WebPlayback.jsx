@@ -16,7 +16,6 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
 
     useEffect(() => {
-        console.log("WebPlayback received token:", props.token);
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
         script.async = true;
@@ -80,7 +79,7 @@ function WebPlayback(props) {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
-            <div className="w-full max-w-md bg-white bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
+            <div className="w-full max-w-md bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
                 {current_track.album.images[0].url && (
                     <img
                         src={current_track.album.images[0].url}
@@ -89,8 +88,8 @@ function WebPlayback(props) {
                     />
                 )}
                 <div className="w-full text-center">
-                    <div className="text-2xl font-bold text-gray-900 truncate">{current_track.name || <span className="text-gray-400">No Track</span>}</div>
-                    <div className="text-lg text-gray-700 truncate">{current_track.artists[0].name || <span className="text-gray-400">No Artist</span>}</div>
+                    <div className="text-2xl font-bold text-white truncate">{current_track.name || <span className="text-white">No Track</span>}</div>
+                    <div className="text-lg text-white truncate">{current_track.artists[0].name || <span className="text-white">No Artist</span>}</div>
                 </div>
                 <div className="flex justify-center gap-6 w-full">
                     <button
