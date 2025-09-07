@@ -78,8 +78,8 @@ function WebPlayback(props) {
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
-            <div className="flex flex-col md:flex-row bg-white bg-opacity-90 rounded-2xl shadow-2xl p-8 gap-8 items-center">
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
+            <div className="w-full max-w-md bg-white bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
                 {current_track.album.images[0].url && (
                     <img
                         src={current_track.album.images[0].url}
@@ -87,36 +87,34 @@ function WebPlayback(props) {
                         className="rounded-xl w-64 h-64 object-cover shadow-lg"
                     />
                 )}
-                <div className="flex flex-col items-center md:items-start gap-4">
-                    <div>
-                        <div className="text-3xl font-bold text-gray-900 mb-1">{current_track.name || <span className="text-gray-400">No Track</span>}</div>
-                        <div className="text-xl text-gray-700 mb-4">{current_track.artists[0].name || <span className="text-gray-400">No Artist</span>}</div>
-                    </div>
-                    <div className="flex gap-6">
-                        <button
-                            className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-5 rounded-full shadow transition"
-                            onClick={() => { player.previousTrack(); }}
-                            aria-label="Previous Track"
-                        >
-                            &#60;&#60;
-                        </button>
-                        <button
-                            className={`${
-                                is_paused ? "bg-green-700 hover:bg-green-800" : "bg-green-500 hover:bg-green-600"
-                            } text-white text-2xl font-bold py-2 px-8 rounded-full shadow transition`}
-                            onClick={() => { player.togglePlay(); }}
-                            aria-label={is_paused ? "Play" : "Pause"}
-                        >
-                            {is_paused ? "PLAY" : "PAUSE"}
-                        </button>
-                        <button
-                            className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-5 rounded-full shadow transition"
-                            onClick={() => { player.nextTrack(); }}
-                            aria-label="Next Track"
-                        >
-                            &#62;&#62;
-                        </button>
-                    </div>
+                <div className="w-full text-center">
+                    <div className="text-2xl font-bold text-gray-900 truncate">{current_track.name || <span className="text-gray-400">No Track</span>}</div>
+                    <div className="text-lg text-gray-700 truncate">{current_track.artists[0].name || <span className="text-gray-400">No Artist</span>}</div>
+                </div>
+                <div className="flex justify-center gap-6 w-full">
+                    <button
+                        className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
+                        onClick={() => { player.previousTrack(); }}
+                        aria-label="Previous Track"
+                    >
+                        &#60;&#60;
+                    </button>
+                    <button
+                        className={`${
+                            is_paused ? "bg-green-700 hover:bg-green-800" : "bg-green-500 hover:bg-green-600"
+                        } text-white text-2xl font-bold py-2 px-8 rounded-full shadow transition`}
+                        onClick={() => { player.togglePlay(); }}
+                        aria-label={is_paused ? "Play" : "Pause"}
+                    >
+                        {is_paused ? "PLAY" : "PAUSE"}
+                    </button>
+                    <button
+                        className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
+                        onClick={() => { player.nextTrack(); }}
+                        aria-label="Next Track"
+                    >
+                        &#62;&#62;
+                    </button>
                 </div>
             </div>
         </div>
