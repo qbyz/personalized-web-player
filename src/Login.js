@@ -4,7 +4,7 @@ export default function Login() {
     return (
         <div className="login-container">
             <button
-                onClick={() => (window.location.href = '/api/login')}
+                onClick={() => (window.location.href = '../pages/auth/api/login')}
                 className="login-button"
             >
                 Login with Spotify
