@@ -101,7 +101,7 @@ function WebPlayback(props) {
                     <div className="text-2xl font-bold text-white truncate">{current_track.name || <span className="text-white">No Track</span>}</div>
                     <div className="text-lg text-white truncate">{current_track.artists[0].name || <span className="text-white">No Artist</span>}</div>
                 </div>
-                <div className="flex justify-center gap-4 w-full">
+                <div className="flex justify-center gap-3 w-full">
                     <button
                         className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
                         onClick={() => { player.previousTrack(); }}
