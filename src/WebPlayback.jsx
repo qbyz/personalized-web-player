@@ -142,7 +142,7 @@ function WebPlayback(props) {
                                 await player.seek(seekPosition);
                             }
                         }}
-                        className="w-full h-2 rounded bg-gray-700 accent-green-500"
+                        className="w-full h-1 rounded bg-gray-800 accent-green-500"
                         aria-label="Track progress"
                     />
                     <div className="flex justify-between w-full text-xs text-white mt-1">
@@ -150,6 +150,7 @@ function WebPlayback(props) {
                         <span>{formatTime(duration)}</span>
                     </div>
                 </div>
+
                 <div className="flex justify-center gap-3 w-full">
                     <button
                         className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition flex items-center justify-center"
