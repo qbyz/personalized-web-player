@@ -9,12 +9,22 @@ const track = {
     artists: [{ name: "" }]
 };
 
+function formatTime(ms) {
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
 function WebPlayback(props) {
     const [is_paused, setPaused] = useState(false);
     const [is_active, setActive] = useState(false);
     const [player, setPlayer] = useState(undefined);
     const [current_track, setTrack] = useState(track);
+    const [position, setPosition] = useState(0);
+    const [duration, setDuration] = useState(0);
 
+    // Set --app-height for mobile viewport
     useEffect(() => {
         const setAppHeight = () => {
             document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
@@ -24,7 +34,7 @@ function WebPlayback(props) {
         return () => window.removeEventListener('resize', setAppHeight);
     }, []);
 
-
+    // Player setup and event listeners
     useEffect(() => {
         const script = document.createElement("script");
         script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -66,6 +76,9 @@ function WebPlayback(props) {
                 setTrack(state.track_window.current_track);
                 setPaused(state.paused);
 
+                setPosition(state.position);
+                setDuration(state.duration);
+
                 player.getCurrentState().then(state => {
                     setActive(!!state);
                 });
@@ -74,6 +87,20 @@ function WebPlayback(props) {
             player.connect();
         };
     }, [props.token]);
+
+    // Progress bar auto-update when playing
+    useEffect(() => {
+        let interval = null;
+        if (!is_paused && duration > 0) {
+            interval = setInterval(() => {
+                setPosition(pos => {
+                    if (pos + 1000 < duration) return pos + 1000;
+                    return duration;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [is_paused, duration]);
 
     if (!is_active) {
         return (
@@ -88,7 +115,7 @@ function WebPlayback(props) {
     }
 
     return (
-        <div className="h-[var(--app-height)]  flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
+        <div className="h-[var(--app-height)] flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
             <div className="w-full max-w-md bg-cardbg bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
                 {current_track.album.images[0].url && (
                     <img
@@ -101,15 +128,37 @@ function WebPlayback(props) {
                     <div className="text-2xl font-bold text-white truncate">{current_track.name || <span className="text-white">No Track</span>}</div>
                     <div className="text-lg text-white truncate">{current_track.artists[0].name || <span className="text-white">No Artist</span>}</div>
                 </div>
+                {/* Progress Bar */}
+                <div className="w-full flex flex-col items-center">
+                    <input
+                        type="range"
+                        min={0}
+                        max={duration}
+                        value={position}
+                        onChange={async (e) => {
+                            const seekPosition = Number(e.target.value);
+                            setPosition(seekPosition);
+                            if (player) {
+                                await player.seek(seekPosition);
+                            }
+                        }}
+                        className="w-full h-2 rounded bg-gray-700 accent-green-500"
+                        aria-label="Track progress"
+                    />
+                    <div className="flex justify-between w-full text-xs text-white mt-1">
+                        <span>{formatTime(position)}</span>
+                        <span>{formatTime(duration)}</span>
+                    </div>
+                </div>
                 <div className="flex justify-center gap-3 w-full">
                     <button
-                        className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
+                        className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition flex items-center justify-center"
                         onClick={() => { player.previousTrack(); }}
                         aria-label="Previous Track"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" className="w-8 h-8">
-                            <polygon points="14,16 26,27 26,5" fill="#243642" opacity="0.7"/>
-                            <polygon points="6,16 18,27 18,5" fill="#243642"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="white">
+                            <polygon points="14,16 26,27 26,5" opacity="0.7"/>
+                            <polygon points="6,16 18,27 18,5"/>
                         </svg>
                     </button>
                     <button
@@ -122,13 +171,13 @@ function WebPlayback(props) {
                         {is_paused ? "PLAY" : "PAUSE"}
                     </button>
                     <button
-                        className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
+                        className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition flex items-center justify-center"
                         onClick={() => { player.nextTrack(); }}
                         aria-label="Next Track"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" className="w-8 h-8">
-                            <polygon points="18,16 6,5 6,27" fill="#243642" opacity="0.7"/>
-                            <polygon points="26,16 14,5 14,27" fill="#243642"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="white">
+                            <polygon points="18,16 6,5 6,27" opacity="0.7"/>
+                            <polygon points="26,16 14,5 14,27"/>
                         </svg>
                     </button>
                 </div>
