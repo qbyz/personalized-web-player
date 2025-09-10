@@ -115,7 +115,7 @@ function WebPlayback(props) {
                     <button
                         className={`${
                             is_paused ? "bg-green-700 hover:bg-hovergreen" : "bg-green-500 hover:bg-hovergreen"
-                        } text-white text-2xl font-bold py-2 px-8 rounded-full shadow transition`}
+                        } text-cardbg text-2xl font-bold py-2 px-8 rounded-full shadow transition`}
                         onClick={() => { player.togglePlay(); }}
                         aria-label={is_paused ? "Play" : "Pause"}
                     >
