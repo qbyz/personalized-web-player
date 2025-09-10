@@ -108,8 +108,8 @@ function WebPlayback(props) {
                         aria-label="Previous Track"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" className="w-8 h-8">
-                            <polygon points="14,16 26,27 26,5" fill="cardbg" opacity="0.7"/>
-                            <polygon points="6,16 18,27 18,5" fill="currentColor"/>
+                            <polygon points="14,16 26,27 26,5" fill="#243642" opacity="0.7"/>
+                            <polygon points="6,16 18,27 18,5" fill="#243642"/>
                         </svg>
                     </button>
                     <button
@@ -127,8 +127,8 @@ function WebPlayback(props) {
                         aria-label="Next Track"
                     >
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32" className="w-8 h-8">
-                            <polygon points="18,16 6,5 6,27" fill="cardbg" opacity="0.7"/>
-                            <polygon points="26,16 14,5 14,27" fill="currentColor"/>
+                            <polygon points="18,16 6,5 6,27" fill="#243642" opacity="0.7"/>
+                            <polygon points="26,16 14,5 14,27" fill="#243642"/>
                         </svg>
                     </button>
                 </div>
