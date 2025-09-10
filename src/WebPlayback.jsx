@@ -78,8 +78,8 @@ function WebPlayback(props) {
     if (!is_active) {
         return (
             <div className="h-[var(--app-height)] flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
-                <div className="bg-white bg-opacity-80 rounded-2xl px-8 py-6 shadow-xl">
-                    <b className="text-lg text-gray-800">
+                <div className="bg-cardbg bg-opacity-80 rounded-2xl px-8 py-6 shadow-xl">
+                    <b className="text-lg text-white">
                         Transferring playback... your web player should appear in Spotify Connect shortly.
                     </b>
                 </div>
@@ -89,7 +89,7 @@ function WebPlayback(props) {
 
     return (
         <div className="h-[var(--app-height)]  flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
-            <div className="w-full max-w-md bg-gray-900 bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
+            <div className="w-full max-w-md bg-cardbg bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
                 {current_track.album.images[0].url && (
                     <img
                         src={current_track.album.images[0].url}
@@ -103,7 +103,7 @@ function WebPlayback(props) {
                 </div>
                 <div className="flex justify-center gap-6 w-full">
                     <button
-                        className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
+                        className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
                         onClick={() => { player.previousTrack(); }}
                         aria-label="Previous Track"
                     >
@@ -114,7 +114,7 @@ function WebPlayback(props) {
                     </button>
                     <button
                         className={`${
-                            is_paused ? "bg-green-700 hover:bg-green-800" : "bg-green-500 hover:bg-green-600"
+                            is_paused ? "bg-green-700 hover:bg-hovergreen" : "bg-green-500 hover:bg-hovergreen"
                         } text-white text-2xl font-bold py-2 px-8 rounded-full shadow transition`}
                         onClick={() => { player.togglePlay(); }}
                         aria-label={is_paused ? "Play" : "Pause"}
@@ -122,7 +122,7 @@ function WebPlayback(props) {
                         {is_paused ? "PLAY" : "PAUSE"}
                     </button>
                     <button
-                        className="bg-green-500 hover:bg-green-600 text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
+                        className="bg-green-500 hover:bg-hovergreen text-white text-2xl font-bold py-2 px-6 rounded-full shadow transition"
                         onClick={() => { player.nextTrack(); }}
                         aria-label="Next Track"
                     >
