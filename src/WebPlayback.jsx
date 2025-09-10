@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { Analytics } from '@vercel/analytics/react';
 
 const track = {
     name: "",
@@ -182,6 +183,7 @@ function WebPlayback(props) {
                         </svg>
                     </button>
                 </div>
+                <Analytics />
             </div>
         </div>
     );
