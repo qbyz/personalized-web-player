@@ -157,7 +157,7 @@ function WebPlayback(props) {
                         onClick={() => { player.previousTrack(); }}
                         aria-label="Previous Track"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="white">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="#243642">
                             <polygon points="14,16 26,27 26,5" opacity="0.7"/>
                             <polygon points="6,16 18,27 18,5"/>
                         </svg>
@@ -176,7 +176,7 @@ function WebPlayback(props) {
                         onClick={() => { player.nextTrack(); }}
                         aria-label="Next Track"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="white">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="w-8 h-8" fill="#243642">
                             <polygon points="18,16 6,5 6,27" opacity="0.7"/>
                             <polygon points="26,16 14,5 14,27"/>
                         </svg>
