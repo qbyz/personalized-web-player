@@ -120,23 +120,38 @@ function WebPlayback(props) {
             <div className="w-full max-w-md bg-cardbg bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
                 {is_paused
                     ?
-                        <div className="flex items-center justify-center w-64 h-64 rounded-full bg-black shadow-lg">
-                            {current_track.album.images[0].url && (
-                                <img
-                                    src={current_track.album.images[0].url}
-                                    alt="Album cover"
-                                    className="rounded-full w-32 h-32 object-cover shadow-lg"
-                                />
-                            )}
+                        <div className="relative flex items-center justify-center w-64 h-64 rounded-full bg-gradient-to-br from-neutral-900 to-black shadow-lg">
+
+                            <div className="absolute inset-0 rounded-full ring-[1px] ring-neutral-800" />
+                            <div className="absolute inset-2 rounded-full ring-[1px] ring-neutral-800" />
+                            <div className="absolute inset-4 rounded-full ring-[1px] ring-neutral-800" />
+
+                            <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg">
+                                {current_track.album.images[0].url && (
+                                    <img
+                                        src={current_track.album.images[0].url}
+                                        alt="Album cover"
+                                        className="w-full h-full object-cover"
+                                    />
+                                )}
+                            </div>
                         </div>
                     :
-                        <div className="flex items-center justify-center w-64 h-64 rounded-full bg-black rotanimation  shadow-lg">
-                        {current_track.album.images[0].url && (
-                        <img
-                        src={current_track.album.images[0].url}
-                        alt="Album cover"
-                        className="rounded-full w-32 h-32 object-cover shadow-lg"
-                        />)}
+                        <div className="relative flex items-center justify-center w-64 h-64 rounded-full bg-gradient-to-br from-neutral-900 to-black shadow-lg rotanimation">
+
+                            <div className="absolute inset-0 rounded-full ring-[1px] ring-neutral-800" />
+                            <div className="absolute inset-2 rounded-full ring-[1px] ring-neutral-800" />
+                            <div className="absolute inset-4 rounded-full ring-[1px] ring-neutral-800" />
+
+                            <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg">
+                                {current_track.album.images[0].url && (
+                                    <img
+                                        src={current_track.album.images[0].url}
+                                        alt="Album cover"
+                                        className="w-full h-full object-cover"
+                                    />
+                                )}
+                            </div>
                         </div>
                 }
 
