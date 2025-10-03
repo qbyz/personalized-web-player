@@ -118,7 +118,7 @@ function WebPlayback(props) {
     return (
         <div className="h-[var(--app-height)] flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
             <div className="w-full max-w-md bg-cardbg bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
-                <div className="flex items-center justify-center w-64 h-64 rounded-full border-4 rotanimation border-black shadow-lg">
+                <div className="flex items-center justify-center w-64 h-64 rounded-full bg-black rotanimation  shadow-lg">
                     {current_track.album.images[0].url && (
                         <img
                             src={current_track.album.images[0].url}
