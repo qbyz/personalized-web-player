@@ -128,6 +128,7 @@ function WebPlayback(props) {
                             <div className="absolute inset-6 rounded-full ring-[1px] ring-neutral-800" />
                             <div className="absolute inset-8 rounded-full ring-[1px] ring-neutral-800" />
                             <div className="absolute inset-10 rounded-full ring-[1px] ring-neutral-800" />
+                            <div className="absolute inset 15 rounded-full ring-[4px] ring-neutral-700" />
 
                             <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg">
                                 {current_track.album.images[0].url && (
