@@ -10,6 +10,20 @@
         --app-height: 100dvh; /* Use dynamic viewport units if supported */
     }
 }
+
+@keyframes vinylanimation {
+    0% {
+        rotate: 0deg;
+    }
+    100% {
+        rotate: 360deg;
+    }
+}
+
+.rotanimation {
+    animation: vinylanimation 2s infinite linear;
+}
+
 body, #root {
     min-height: 100vh;
     min-height: var(--app-height);

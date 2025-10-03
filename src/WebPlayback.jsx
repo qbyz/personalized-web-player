@@ -118,13 +118,15 @@ function WebPlayback(props) {
     return (
         <div className="h-[var(--app-height)] flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black p-4">
             <div className="w-full max-w-md bg-cardbg bg-opacity-90 rounded-2xl shadow-2xl flex flex-col items-center p-6 space-y-6">
-                {current_track.album.images[0].url && (
-                    <img
-                        src={current_track.album.images[0].url}
-                        alt="Album cover"
-                        className="rounded-xl w-64 h-64 object-cover shadow-lg"
-                    />
-                )}
+                <div className="flex items-center justify-center w-64 h-64 rounded-full border-4 rotanimation border-black shadow-lg">
+                    {current_track.album.images[0].url && (
+                        <img
+                            src={current_track.album.images[0].url}
+                            alt="Album cover"
+                            className="rounded-full w-32 h-32 object-cover shadow-lg"
+                        />
+                    )}
+                </div>
                 <div className="w-full text-center">
                     <div className="text-2xl font-bold text-white truncate">{current_track.name || <span className="text-white">No Track</span>}</div>
                     <div className="text-lg text-white truncate">{current_track.artists[0].name || <span className="text-white">No Artist</span>}</div>
