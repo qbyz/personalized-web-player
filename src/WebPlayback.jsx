@@ -10,11 +10,71 @@ const track = {
     artists: [{ name: "" }]
 };
 
+const SPOTIFY_API_URL = 'https://api.spotify.com/v1';
+
 function formatTime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+async function playTrack(token, deviceId, trackUri) {
+    try {
+        await fetch(`${SPOTIFY_API_URL}/me/player/play`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                device_ids: [deviceId],
+                uris: [trackUri]
+            })
+        });
+    } catch (error) {
+        console.error('Error playing track:', error);
+    }
+}
+
+async function searchSpotify(token, query) {
+    try {
+        const response = await fetch(
+            `${SPOTIFY_API_URL}/search?q=${encodeURIComponent(query)}&type=track&limit=30`,
+            { headers: { 'Authorization': `Bearer ${token}` } }
+        );
+        const data = await response.json();
+        return data.tracks?.items || [];
+    } catch (error) {
+        console.error('Error searching:', error);
+        return [];
+    }
+}
+
+async function fetchUserLibrary(token) {
+    try {
+        let allTracks = [];
+        let offset = 0;
+        const limit = 50;
+        let total = limit;
+
+        // Paginate through all saved tracks
+        while (offset < total) {
+            const response = await fetch(
+                `${SPOTIFY_API_URL}/me/tracks?limit=${limit}&offset=${offset}`,
+                { headers: { 'Authorization': `Bearer ${token}` } }
+            );
+            const data = await response.json();
+            allTracks = allTracks.concat(data.items.map(item => item.track));
+            total = data.total;
+            offset += limit;
+        }
+
+        return allTracks;
+    } catch (error) {
+        console.error('Error fetching library:', error);
+        return [];
+    }
 }
 
 function WebPlayback(props) {
@@ -24,6 +84,15 @@ function WebPlayback(props) {
     const [current_track, setTrack] = useState(track);
     const [position, setPosition] = useState(0);
     const [duration, setDuration] = useState(0);
+
+    // Search and library state
+    const [view, setView] = useState('player'); // 'player' or 'library'
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [library, setLibrary] = useState([]);
+    const [libraryLoading, setLibraryLoading] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [deviceId, setDeviceId] = useState(null);
 
     // Set --app-height for mobile viewport
     useEffect(() => {
@@ -53,6 +122,7 @@ function WebPlayback(props) {
 
             player.addListener('ready', async ({ device_id }) => {
                 console.log('Ready with Device ID', device_id);
+                setDeviceId(device_id);
 
                 await fetch('https://api.spotify.com/v1/me/player', {
                     method: 'PUT',
@@ -103,6 +173,33 @@ function WebPlayback(props) {
         return () => clearInterval(interval);
     }, [is_paused, duration]);
 
+    // Load user's library on mount
+    useEffect(() => {
+        const loadLibrary = async () => {
+            setLibraryLoading(true);
+            const tracks = await fetchUserLibrary(props.token);
+            setLibrary(tracks);
+            setLibraryLoading(false);
+        };
+        loadLibrary();
+    }, [props.token]);
+
+    // Debounced search
+    useEffect(() => {
+        const timer = setTimeout(async () => {
+            if (searchQuery.trim()) {
+                setSearchLoading(true);
+                const results = await searchSpotify(props.token, searchQuery);
+                setSearchResults(results);
+                setSearchLoading(false);
+            } else {
+                setSearchResults([]);
+            }
+        }, 300); // 300ms debounce
+
+        return () => clearTimeout(timer);
+    }, [searchQuery, props.token]);
+
     if (!is_active) {
         return (
             <div className="h-[var(--app-height)] flex items-center justify-center bg-gradient-to-br from-green-400 via-black to-black">
@@ -111,6 +208,115 @@ function WebPlayback(props) {
                         Transferring playback... your web player should appear in Spotify Connect shortly.
                     </b>
                 </div>
+            </div>
+        );
+    }
+
+    if (view === 'library') {
+        return (
+            <div className="h-[var(--app-height)] bg-gradient-to-br from-green-400 via-black to-black p-4 flex flex-col">
+                {/* Header with back button */}
+                <div className="flex justify-between items-center mb-4">
+                    <button
+                        onClick={() => {
+                            setView('player');
+                            setSearchQuery('');
+                            setSearchResults([]);
+                        }}
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-full transition"
+                    >
+                        ← Back
+                    </button>
+                    <h1 className="text-white text-xl font-bold">Your Library</h1>
+                    <div className="w-20"></div>
+                </div>
+
+                {/* Search bar */}
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        placeholder="Search your library or Spotify..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full px-4 py-2 rounded-full bg-gray-800 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    />
+                </div>
+
+                {/* Track List */}
+                <div className="flex-1 overflow-y-auto bg-cardbg bg-opacity-70 rounded-xl p-4 space-y-2">
+                    {searchLoading && <p className="text-white text-center">Searching...</p>}
+                    {libraryLoading && !searchQuery && <p className="text-white text-center">Loading library...</p>}
+
+                    {searchResults.length > 0 && (
+                        <>
+                            <h2 className="text-green-400 font-bold text-sm sticky top-0 bg-cardbg bg-opacity-70">Search Results</h2>
+                            {searchResults.map((track) => (
+                                <div
+                                    key={track.id}
+                                    onClick={() => {
+                                        playTrack(props.token, deviceId, track.uri);
+                                        setView('player');
+                                    }}
+                                    className="p-3 bg-gray-800 hover:bg-green-600 rounded cursor-pointer transition flex items-center gap-3"
+                                >
+                                    {track.album?.images[0]?.url && (
+                                        <img
+                                            src={track.album.images[0].url}
+                                            alt="Album"
+                                            className="w-12 h-12 rounded object-cover"
+                                        />
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="text-white font-semibold truncate">{track.name}</div>
+                                        <div className="text-gray-300 text-sm truncate">
+                                            {track.artists?.map(a => a.name).join(', ')}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </>
+                    )}
+
+                    {!searchQuery && library.length > 0 && (
+                        <>
+                            <h2 className="text-green-400 font-bold text-sm sticky top-0 bg-cardbg bg-opacity-70">Liked Tracks ({library.length})</h2>
+                            {library.map((track) => (
+                                <div
+                                    key={track.id}
+                                    onClick={() => {
+                                        playTrack(props.token, deviceId, track.uri);
+                                        setView('player');
+                                    }}
+                                    className="p-3 bg-gray-800 hover:bg-green-600 rounded cursor-pointer transition flex items-center gap-3"
+                                >
+                                    {track.album?.images[0]?.url && (
+                                        <img
+                                            src={track.album.images[0].url}
+                                            alt="Album"
+                                            className="w-12 h-12 rounded object-cover"
+                                        />
+                                    )}
+                                    <div className="flex-1 min-w-0">
+                                        <div className="text-white font-semibold truncate">{track.name}</div>
+                                        <div className="text-gray-300 text-sm truncate">
+                                            {track.artists?.map(a => a.name).join(', ')}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </>
+                    )}
+
+                    {!libraryLoading && library.length === 0 && !searchQuery && (
+                        <p className="text-gray-400 text-center mt-8">No liked tracks found</p>
+                    )}
+
+                    {!searchLoading && searchQuery && searchResults.length === 0 && (
+                        <p className="text-gray-400 text-center mt-8">No results found</p>
+                    )}
+                </div>
+
+                <Analytics />
             </div>
         );
     }
@@ -221,6 +427,14 @@ function WebPlayback(props) {
                         </svg>
                     </button>
                 </div>
+
+                <button
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow transition"
+                    onClick={() => setView('library')}
+                    aria-label="Open Library"
+                >
+                    📚 Browse Library & Search
+                </button>
                 <Analytics />
             </div>
         </div>
