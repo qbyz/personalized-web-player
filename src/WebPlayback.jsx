@@ -429,11 +429,11 @@ function WebPlayback(props) {
                 </div>
 
                 <button
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow transition"
+                    className="w-full bg-green-400-600 hover:bg-hovergreen text-white font-bold py-2 px-4 rounded-full shadow transition"
                     onClick={() => setView('library')}
                     aria-label="Open Library"
                 >
-                    📚 Browse Library & Search
+                    Library & Search
                 </button>
                 <Analytics />
             </div>
